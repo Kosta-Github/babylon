@@ -289,6 +289,12 @@ pp.parseSubscripts = function (base, startPos, startLoc, noCalls) {
       node.property = this.parseIdentifier(true);
       node.computed = false;
       base = this.finishNode(node, "MemberExpression");
+  } else if (this.eat(tt.doubleQuestion)) {
+      let node = this.startNodeAt(startPos, startLoc);
+      node.object = base;
+      node.property = this.parseIdentifier(true);
+      node.computed = false;
+      base = this.finishNode(node, "KostaMemberExpression");
     } else if (this.eat(tt.bracketL)) {
       let node = this.startNodeAt(startPos, startLoc);
       node.object = base;
@@ -513,6 +519,9 @@ pp.parseExprAtom = function (refShorthandDefaultPos) {
       } else {
         this.raise(callee.start, "Binding should be performed on object property.");
       }
+
+    case tt.doubleQuestion:
+      this.raise(callee.start, "Double questionmark not implemented yet");
 
     default:
       this.unexpected();

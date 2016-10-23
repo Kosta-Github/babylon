@@ -285,6 +285,16 @@ export default class Tokenizer {
     }
   }
 
+  readToken_question() { // '?'
+    ++this.state.pos;
+    let next = this.input.charCodeAt(this.state.pos);
+    if (next === 63) { // '??'
+        ++this.state.pos;
+        return this.finishToken(tt.doubleQuestion);
+    }
+    return this.finishToken(tt.question);
+  }
+
   readToken_slash() { // '/'
     if (this.state.exprAllowed) {
       ++this.state.pos;
@@ -425,7 +435,9 @@ export default class Tokenizer {
           return this.finishToken(tt.colon);
         }
 
-      case 63: ++this.state.pos; return this.finishToken(tt.question);
+      case 63: // '?'
+        return this.readToken_question();
+
       case 64: ++this.state.pos; return this.finishToken(tt.at);
 
       case 96: // '`'
